@@ -9,7 +9,7 @@ The code is based on authors' Tensorflow implementation [here](https://github.co
 2. Set your dataset path like this:
 ````
 $/real-estate-10k
-├──── Training_set
+├──── RealEstate10K
 │      ├──── train
 │      └──── test
 ````
