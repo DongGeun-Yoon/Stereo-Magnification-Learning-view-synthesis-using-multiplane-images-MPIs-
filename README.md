@@ -7,7 +7,7 @@ The code is based on authors' Tensorflow implementation [here](https://github.co
 example images with the original tensorflow weight, which I have converted to PyTorch state dicts.
 
 <p align="center">
-  <img src="mpi_vision/render_00_-2.0.jpg" width="40%"/>
+  <img src="mpi_vision/render_00_-2.0.png" width="40%"/>
   <img src="mpi_vision/render_02_-1.0.png" width="40%"/>
   <img src="mpi_vision/render_06_1.0.png" width="40%"/>
   <img src="mpi_vision/render_08_2.0.png" width="40%"/>
