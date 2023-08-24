@@ -214,7 +214,7 @@ def transform_plane_imgs_torch(imgs, pixel_coords_trg, k_s, k_t, rot, t, n_hat, 
   # convert from [0-height-1, width -1] to [0-1, 0-1]
   height_t = pixel_coords_trg.shape[-3]
   width_t = pixel_coords_trg.shape[-2]
-  pixel_coords_t2s = pixel_coords_t2s / torch.Tensor([height_t - 1, width_t - 1]).to(device)
+  pixel_coords_t2s = pixel_coords_t2s / torch.Tensor([width_t - 1, height_t - 1]).to(device)
 
   # print("pixel_coords_t2s ", L(pixel_coords_t2s))
 
@@ -455,7 +455,6 @@ def projective_inverse_warp_torch(
   filler = filler.repeat(batch, 1, 1)
   intrinsics = torch.cat([intrinsics, torch.zeros([batch, 3, 1]).to(device)], axis=2)
   intrinsics = torch.cat([intrinsics, filler], axis=1)
-
   # Get a 4x4 transformation matrix from 'target' camera frame to 'source'
   # pixel frame.
   proj_tgt_cam_to_src_pixel = torch.matmul(intrinsics, pose)
@@ -464,8 +463,7 @@ def projective_inverse_warp_torch(
   #print(f'src_pixel_coords shape {src_pixel_coords.shape}')
   #print(f'src_pixel_coords {L(src_pixel_coords[:, :, :3,:])}')
 
-  src_pixel_coords = ( src_pixel_coords + torch.Tensor([0.5, 0.5]).to(device) ) / torch.Tensor([height, width]).to(device)
-
+  src_pixel_coords = ( src_pixel_coords + torch.Tensor([0.5, 0.5]).to(device) ) / torch.Tensor([width, height]).to(device)
   output_img = resampler_wrapper_torch(img, src_pixel_coords)
   if ret_flows:
     return output_img, src_pixel_coords - cam_coords
@@ -777,7 +775,7 @@ def projective_inverse_warp_torch2(
   #print(f'src_pixel_coords shape {src_pixel_coords.shape}')
   #print(f'src_pixel_coords {L(src_pixel_coords[:, :, :3,:])}')
 
-  src_pixel_coords = ( src_pixel_coords + torch.Tensor([0.5, 0.5]).to(device) ) / torch.Tensor([height, width]).to(device)
+  src_pixel_coords = ( src_pixel_coords + torch.Tensor([0.5, 0.5]).to(device) ) / torch.Tensor([width, height]).to(device)
 
   output_img = resampler_wrapper_torch(img, src_pixel_coords)
   if ret_flows:
@@ -827,7 +825,7 @@ def mpi_from_net_output(mpi_pred, dep):
     # reshape mpi_pred to [batch, height, width, channels]
     mpi_pred = mpi_pred.permute(0, 2, 3, 1)
     #print('mpi_pred.shape', mpi_pred.shape)
-    num_mpi_planes = dep['mpi_planes'].shape[1]
+    num_mpi_planes = dep['mpi_planes'].shape[0] # [planes]
     # Rescale blend_weights to (0, 1)
     blend_weights = (mpi_pred[:, :, :, :num_mpi_planes] + 1.) / 2.
     # Rescale alphas to (0, 1)
